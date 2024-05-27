@@ -2,24 +2,31 @@
 import Default from 'components/auth/variants/DefaultAuthLayout';
 import InputField from 'components/fields/InputField';
 import { useLogin } from 'hooks/useLogin';
+import { useRouter } from 'next/navigation';
 import { useState } from 'react';
 
 function SignInDefault() {
    const [error, setError] = useState('');
    const { login: performLogin } = useLogin();
+   const router = useRouter();
 
    const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
+      setError('');
+
+      e.preventDefault();
+
       const formData = new FormData(e.currentTarget);
       const login = formData.get('login') as string;
       const password = formData.get('password') as string;
 
       try {
-         await performLogin(login, password);
+         const success = await performLogin(login, password);
+         if (success) {
+            await router.push('/admin/default');
+         }
       } catch (error) {
          setError(error.message);
       }
-
-      e.preventDefault();
    };
 
    return (
@@ -55,9 +62,11 @@ function SignInDefault() {
                      name="password"
                   />
 
+                  <p className="my-3 text-center text-red-500">{error}</p>
+
                   <button
                      type="submit"
-                     className="linear w-full rounded-xl bg-brand-500 py-3 text-base font-medium text-white transition duration-200 hover:bg-brand-600 active:bg-brand-700 dark:bg-brand-400 dark:text-white dark:hover:bg-brand-300 dark:active:bg-brand-200"
+                     className="linear mt-3 w-full rounded-xl bg-brand-500 py-3 text-base font-medium text-white transition duration-200 hover:bg-brand-600 active:bg-brand-700 dark:bg-brand-400 dark:text-white dark:hover:bg-brand-300 dark:active:bg-brand-200"
                   >
                      Вход
                   </button>

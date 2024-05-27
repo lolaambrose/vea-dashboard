@@ -4,18 +4,22 @@ import 'styles/App.css';
 import 'styles/Contact.css';
 // import '@asseinfo/react-kanban/dist/styles.css';
 // import 'styles/Plugins.css';
-import 'styles/MiniCalendar.css';
 import 'styles/index.css';
+import 'styles/MiniCalendar.css';
 
+import { UserProvider } from 'contexts/UserContext';
 import dynamic from 'next/dynamic';
 
 const _NoSSR = ({ children }) => <React.Fragment>{children}</React.Fragment>;
 
 const NoSSR = dynamic(() => Promise.resolve(_NoSSR), {
-  ssr: false,
+   ssr: false,
 });
 
 export default function AppWrappers({ children }: { children: ReactNode }) {
-  ``;
-  return <NoSSR>{children}</NoSSR>;
+   return (
+      <NoSSR>
+         <UserProvider>{children}</UserProvider>
+      </NoSSR>
+   );
 }
